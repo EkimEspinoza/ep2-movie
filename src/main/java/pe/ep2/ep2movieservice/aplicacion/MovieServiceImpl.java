@@ -112,21 +112,23 @@ public class MovieServiceImpl implements MovieService{
         try {
             //Validar que exista la pelicula
             Movie movie =  movieRepository.findByTitle(title);
-            if(title != null ){
-                return BasicResponse.whenNoDataFound("Peicula " + title);
+            if(movie == null ){
+                return BasicResponse.whenNoDataFound("Pelicula " + title);
             } else{
                 // validar que la clave sea correcta
                 if(request.getPassword().equals(Password)){
                     movie.setDirector(request.getDirector()!= null &&  !request.getDirector().isBlank() ? request.getDirector() : movie.getDirector());
                     movie.setGenre(request.getGenre()!= null &&  !request.getGenre().isBlank() ? request.getGenre() : movie.getGenre());
                     movie.setTitle(request.getTitle()!= null &&  !request.getTitle().isBlank() ? request.getTitle() : movie.getTitle());
+                    movie.setYear(movie.getYear());
+                    movie.setRating(movie.getRating());
+
                     return BasicResponse.whenSuccess();
                 }
                 else{
                     return BasicResponse.whenPassNotMatch();
                 }
             }
-
     }
         catch (Exception ex){
             return BasicResponse.whenError(ex.getMessage());
